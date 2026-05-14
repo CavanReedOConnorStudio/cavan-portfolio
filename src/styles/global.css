@@ -158,7 +158,10 @@ nav a.active::after {
 
 .site-footer p {
   margin: 0;
+}:root {
+  --line: rgba(0, 0, 0, 0.1);
 }
+
 /* =========================
    WORKS GRID (CLEAN SYSTEM)
 ========================= */
@@ -180,21 +183,26 @@ nav a.active::after {
   overflow: hidden;
 }
 
+/* SINGLE CONSISTENT IMAGE FRAME */
 .image-frame {
   width: 100%;
   aspect-ratio: 4 / 5;
-  background: #ffffff;
+  background: #f4f4f4;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   overflow: hidden;
 }
 
 .image-frame img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   display: block;
+
+  transition: transform 0.3s ease;
 }
 
 .work-item:hover img {
@@ -233,8 +241,19 @@ nav a.active::after {
   grid-column: span 2;
 }
 
+.image-frame img {
+  filter: blur(10px);
+  transform: scale(1.02);
+  transition: filter 0.4s ease, transform 0.4s ease;
+}
+
+.image-frame img.loaded {
+  filter: blur(0);
+  transform: scale(1);
+}
+
 /* =========================
-   RESPONSIVE
+   RESPONSIVE GRID
 ========================= */
 
 @media (max-width: 900px) {
@@ -251,7 +270,7 @@ nav a.active::after {
 }
 
 /* =========================
-   DETAIL VIEWING ROOM
+   ARTWORK DETAIL PAGE (BASE)
 ========================= */
 
 .detail {
@@ -262,72 +281,180 @@ nav a.active::after {
   max-width: 1400px;
   margin: 0 auto;
   padding: 80px 24px;
+
+  align-items: center; /* KEY FIX: vertical centering */
 }
 
-/* image area */
+/* IMAGE */
 .detail-image img {
   width: 100%;
   height: auto;
   display: block;
+  cursor: zoom-in;
 }
 
-/* info panel */
+/* =========================
+   INFO PANEL (CENTERED ALIGN)
+========================= */
+
 .info {
   display: flex;
   flex-direction: column;
   gap: 24px;
 
   position: sticky;
-  top: 80px;
+  top: 50%;
+  transform: translateY(-50%); /* TRUE VISUAL CENTER */
 }
 
-/* title */
+/* TITLE */
 .info h1 {
   font-size: 18px;
   letter-spacing: 0.02em;
-  margin-bottom: 10px;
+  margin: 0;
 }
 
-/* metadata system */
+/* =========================
+   META SYSTEM
+========================= */
+
 .meta {
   display: flex;
   flex-direction: column;
   gap: 10px;
 
-  border-top: 1px solid var(--line);
+  border-top: 1px solid rgba(0,0,0,0.1);
   padding-top: 16px;
+
   font-size: 14px;
 }
 
 .meta-row {
   display: flex;
   justify-content: space-between;
-  gap: 20px;
 }
 
 .label {
   opacity: 0.5;
 }
 
-/* description */
+/* =========================
+   DIVIDERS
+========================= */
+
+.divider {
+  height: 1px;
+  background: rgba(0,0,0,0.1);
+  margin: 8px 0;
+}
+
+/* =========================
+   DESCRIPTION + BACK
+========================= */
+
 .description {
   font-size: 15px;
   line-height: 1.6;
   opacity: 0.85;
 }
 
-/* back link */
 .back {
-  margin-top: 10px;
   font-size: 14px;
   opacity: 0.6;
+  text-decoration: none;
 }
 
 .back:hover {
   opacity: 1;
 }
 
-/* responsive */
+/* =========================
+   DETAIL NAV BLOCK (TEXT STYLE)
+========================= */
+
+.detail-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 14px;
+}
+
+.nav-label {
+  font-size: 12px;
+  opacity: 0.5;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: inherit;
+  opacity: 0.75;
+}
+
+.nav-link:hover {
+  opacity: 1;
+}
+
+/* =========================
+   LIGHTBOX BASE (FIXED CENTERING)
+========================= */
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* soft backdrop instead of harsh black */
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+
+  transition: opacity 0.25s ease;
+}
+
+/* ACTIVE STATE */
+.lightbox.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.lightbox img {
+  will-change: transform;
+}
+
+/* =========================
+   IMAGE POSITIONING (IMPORTANT)
+========================= */
+
+.lightbox img {
+  display: block;
+
+  max-width: 92vw;
+  max-height: 92vh;
+
+  object-fit: contain;
+
+  transform-origin: center center;
+
+  /* smooth zoom feel */
+  transition: transform 0.12s ease;
+
+  cursor: zoom-in;
+}
+/* =========================
+   MOBILE
+========================= */
+
 @media (max-width: 900px) {
   .detail {
     grid-template-columns: 1fr;
@@ -336,8 +463,10 @@ nav a.active::after {
 
   .info {
     position: static;
+    transform: none;
   }
 }
+
 
 /* =========================
    CV CONTAINER (UPDATED SYSTEM)

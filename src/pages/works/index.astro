@@ -10,11 +10,17 @@ import { works } from "../../data/works.js";
     {works.map((work) => (
       <a
         href={`/works/${work.slug}`}
-        class={`work-item ${work.span ? work.span : ""}`}
+        class="work-item"
       >
 
         <div class="image-frame">
-          <img src={work.image} alt={work.title} />
+          <img
+            src={work.thumb}
+            data-full={work.image}
+            alt={work.title}
+            loading="lazy"
+            decoding="async"
+          />
         </div>
 
         <div class="overlay">
@@ -25,5 +31,24 @@ import { works } from "../../data/works.js";
     ))}
 
   </div>
+
+  <!-- progressive enhancement (optional preload full images on hover) -->
+ <script is:inline>
+  const imgs = document.querySelectorAll(".image-frame img");
+
+  imgs.forEach((img) => {
+    const full = img.getAttribute("data-full");
+
+    if (!full) return;
+
+    const preload = new Image();
+    preload.src = full;
+
+    preload.onload = () => {
+      img.src = full;
+      img.classList.add("loaded");
+    };
+  });
+</script>
 
 </ArtworkLayout>

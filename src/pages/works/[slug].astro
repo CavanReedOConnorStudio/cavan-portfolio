@@ -2,7 +2,7 @@
 import ArtworkLayout from "../../layouts/ArtworkLayout.astro";
 import { works } from "../../data/works.js";
 
-export async function getStaticPaths() {
+export function getStaticPaths() {
   return works.map((work) => ({
     params: { slug: work.slug },
     props: { work }
@@ -10,6 +10,10 @@ export async function getStaticPaths() {
 }
 
 const { work } = Astro.props;
+
+const index = works.findIndex(w => w.slug === work.slug);
+const prev = works[index - 1];
+const next = works[index + 1];
 ---
 
 <ArtworkLayout title={work.title} current="works">
@@ -18,7 +22,13 @@ const { work } = Astro.props;
 
     <!-- IMAGE -->
     <div class="detail-image">
-      <img src={work.image} alt={work.title} />
+      <img
+        id="workImage"
+        src={work.image}
+        alt={work.title}
+        loading="eager"
+        decoding="async"
+      />
     </div>
 
     <!-- INFO -->
@@ -26,8 +36,8 @@ const { work } = Astro.props;
 
       <h1>{work.title}</h1>
 
+      <!-- META -->
       <div class="meta">
-
         <div class="meta-row">
           <span class="label">Year</span>
           <span>{work.year}</span>
@@ -42,17 +52,193 @@ const { work } = Astro.props;
           <span class="label">Size</span>
           <span>{work.size}</span>
         </div>
-
       </div>
+
+      <!-- DIVIDER -->
+      <div class="divider"></div>
 
       {work.description && (
         <p class="description">{work.description}</p>
       )}
 
+      <!-- BACK -->
       <a class="back" href="/works">← Back to works</a>
+
+      <!-- DIVIDER -->
+      <div class="divider"></div>
+
+      <!-- NAV -->
+      <div class="detail-nav">
+
+        {next ? (
+          <>
+            <div class="nav-label">Next</div>
+            <a class="nav-link" href={`/works/${next.slug}`}>
+              → {next.title}
+            </a>
+          </>
+        ) : null}
+
+        {prev ? (
+          <>
+            <div class="nav-label">Previous</div>
+            <a class="nav-link" href={`/works/${prev.slug}`}>
+              ← {prev.title}
+            </a>
+          </>
+        ) : null}
+
+      </div>
+
+      <!-- DIVIDER -->
+      <div class="divider"></div>
 
     </aside>
 
   </div>
+
+  <!-- LIGHTBOX (UNCHANGED STRUCTURE) -->
+  <div id="lightbox" class="lightbox">
+    <img id="lightboxImg" src={work.image} alt={work.title} />
+  </div>
+
+  <!-- SCRIPT (SAFE FIXED VERSION) -->
+  <script is:inline define:vars={{ works, work }}>
+  const workImage = document.getElementById("workImage");
+  const lightbox = document.getElementById("lightbox");
+  const lightboxImg = document.getElementById("lightboxImg");
+
+  if (!workImage || !lightbox || !lightboxImg) {
+    console.error("Lightbox elements missing");
+  }
+
+  let scale = 1;
+  let posX = 0;
+  let posY = 0;
+  let isDragging = false;
+  let startX = 0;
+  let startY = 0;
+
+  const index = works.findIndex(w => w.slug === work.slug);
+  const next = works[index + 1];
+  const prev = works[index - 1];
+
+  function applyTransform() {
+    lightboxImg.style.transform =
+      `translate(${posX}px, ${posY}px) scale(${scale})`;
+  }
+
+  function reset() {
+    scale = 1;
+    posX = 0;
+    posY = 0;
+    applyTransform();
+  }
+
+  function openLightbox() {
+    lightbox.classList.add("active");
+    reset();
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove("active");
+  }
+
+  function zoomIn() {
+    scale = Math.min(scale + 0.25, 4);
+    applyTransform();
+  }
+
+  function zoomOut() {
+    scale = Math.max(scale - 0.25, 1);
+    if (scale === 1) reset();
+    applyTransform();
+  }
+
+  function toggleZoom() {
+    scale > 1 ? reset() : zoomIn();
+  }
+
+  // =====================
+  // EVENTS (SAFE BINDING)
+  // =====================
+
+  workImage?.addEventListener("click", openLightbox);
+
+  lightbox?.addEventListener("click", (e) => {
+    if (e.target === lightbox) closeLightbox();
+  });
+
+  lightboxImg?.addEventListener("dblclick", toggleZoom);
+
+  lightbox?.addEventListener(
+    "wheel",
+    (e) => {
+      if (!lightbox.classList.contains("active")) return;
+      e.preventDefault();
+
+      e.deltaY < 0 ? zoomIn() : zoomOut();
+    },
+    { passive: false }
+  );
+
+  document.addEventListener("keydown", (e) => {
+    if (!lightbox.classList.contains("active")) return;
+
+    if (e.key === "Escape") closeLightbox();
+    if (e.key === "+") zoomIn();
+    if (e.key === "-") zoomOut();
+    if (e.key === "0") reset();
+
+    // OPTIONAL NAV (keeps your UX clean)
+    if (e.key === "ArrowRight" && next) {
+      window.location.href = `/works/${next.slug}`;
+    }
+
+    if (e.key === "ArrowLeft" && prev) {
+      window.location.href = `/works/${prev.slug}`;
+    }
+  });
+
+  // =====================
+  // DRAG PAN (FIXED)
+  // =====================
+
+  lightboxImg?.addEventListener("mousedown", (e) => {
+    if (scale <= 1) return;
+
+    isDragging = true;
+    startX = e.clientX - posX;
+    startY = e.clientY - posY;
+    lightboxImg.style.cursor = "grabbing";
+  });
+
+  window.addEventListener("mouseup", () => {
+    isDragging = false;
+    lightboxImg.style.cursor = scale > 1 ? "grab" : "zoom-in";
+  });
+
+  window.addEventListener("mousemove", (e) => {
+    if (!isDragging) return;
+
+    posX = e.clientX - startX;
+    posY = e.clientY - startY;
+
+    applyTransform();
+  });
+
+  // =====================
+  // PRELOAD NEXT/PREV
+  // =====================
+
+  function preload(src) {
+    if (!src) return;
+    const img = new Image();
+    img.src = src;
+  }
+
+  if (next?.image) preload(next.image);
+  if (prev?.image) preload(prev.image);
+</script>
 
 </ArtworkLayout>
