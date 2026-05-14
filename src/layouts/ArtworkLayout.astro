@@ -1,0 +1,36 @@
+---
+import "../styles/global.css";
+import Header from "../components/Header.astro";
+
+/* PROPS */
+const { title, current } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>{title}</title>
+  </head>
+
+  <body>
+
+    <div class="site-frame">
+
+      <Header current={current} />
+
+      <main class="site-main">
+        <slot />
+      </main>
+
+      <footer class="site-footer">
+        <p>© {new Date().getFullYear()} Cavan Reed-O'Connor</p>
+      </footer>
+
+    </div>
+
+  </body>
+</html>

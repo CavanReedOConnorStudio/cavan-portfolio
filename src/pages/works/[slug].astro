@@ -1,0 +1,58 @@
+---
+import ArtworkLayout from "../../layouts/ArtworkLayout.astro";
+import { works } from "../../data/works.js";
+
+export async function getStaticPaths() {
+  return works.map((work) => ({
+    params: { slug: work.slug },
+    props: { work }
+  }));
+}
+
+const { work } = Astro.props;
+---
+
+<ArtworkLayout title={work.title} current="works">
+
+  <div class="detail">
+
+    <!-- IMAGE -->
+    <div class="detail-image">
+      <img src={work.image} alt={work.title} />
+    </div>
+
+    <!-- INFO -->
+    <aside class="info">
+
+      <h1>{work.title}</h1>
+
+      <div class="meta">
+
+        <div class="meta-row">
+          <span class="label">Year</span>
+          <span>{work.year}</span>
+        </div>
+
+        <div class="meta-row">
+          <span class="label">Medium</span>
+          <span>{work.medium}</span>
+        </div>
+
+        <div class="meta-row">
+          <span class="label">Size</span>
+          <span>{work.size}</span>
+        </div>
+
+      </div>
+
+      {work.description && (
+        <p class="description">{work.description}</p>
+      )}
+
+      <a class="back" href="/works">← Back to works</a>
+
+    </aside>
+
+  </div>
+
+</ArtworkLayout>

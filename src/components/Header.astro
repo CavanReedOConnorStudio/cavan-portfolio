@@ -1,0 +1,35 @@
+---
+/* =========================
+   PROPS
+========================= */
+const { current } = Astro.props;
+---
+
+<!-- =========================
+     SITE HEADER
+========================= -->
+<header class="site-header">
+
+  <!-- LEFT: NAME -->
+  <a href="/" class="site-title">
+    Cavan Reed-O'Connor
+  </a>
+
+  <!-- RIGHT: NAV -->
+  <nav class="site-nav">
+
+    <a href="/works" class={current === "works" ? "active" : ""}>
+      Work
+    </a>
+
+    <a href="/info" class={current === "info" ? "active" : ""}>
+      About
+    </a>
+
+    <a href="/contact" class={current === "contact" ? "active" : ""}>
+      Contact
+    </a>
+
+  </nav>
+
+</header>

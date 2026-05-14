@@ -1,0 +1,61 @@
+---
+import ArtworkLayout from "../layouts/ArtworkLayout.astro";
+---
+
+<ArtworkLayout title="Contact" current="contact">
+
+  <section class="contact-container">
+
+    <!-- LEFT SIDE -->
+  <div class="contact-left">
+  <h2>Contact</h2>
+
+  <div class="contact-details">
+
+    <p class="contact-intro">
+      For enquiries, exhibitions, or commissions, please get in touch via email or form.
+    </p>
+
+    <div class="contact-block">
+      <span class="label">Email</span>
+      <a href="mailto:cavanreedoconnor@gmail.com">
+        cavanreedoconnor@gmail.com
+      </a>
+    </div>
+
+    <div class="contact-block">
+      <span class="label">Instagram</span>
+      <a href="https://instagram.com/cavanreedoconnor.art" target="_blank">
+        @cavanreedoconnor.art
+      </a>
+    </div>
+
+    <div class="contact-block">
+      <span class="label">Phone</span>
+      <a href="tel:+44YOURNUMBERHERE">
+        +44 (0) 7869 999363
+      </a>
+    </div>
+
+  </div>
+</div>
+
+    <!-- RIGHT SIDE (FORM) -->
+    <form
+      class="contact-form"
+      action="https://formspree.io/f/xvzlyngy"
+      method="POST"
+    >
+      <input type="text" name="name" placeholder="Name" required />
+
+      <input type="email" name="email" placeholder="Email" required />
+
+      <textarea name="message" placeholder="Message" rows="6" required></textarea>
+
+      <button type="submit">Send Message</button>
+      
+    </form>
+
+  </section>
+
+</ArtworkLayout>

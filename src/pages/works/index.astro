@@ -1,0 +1,29 @@
+---
+import ArtworkLayout from "../../layouts/ArtworkLayout.astro";
+import { works } from "../../data/works.js";
+---
+
+<ArtworkLayout title="Works" current="works">
+
+  <div class="works-grid">
+
+    {works.map((work) => (
+      <a
+        href={`/works/${work.slug}`}
+        class={`work-item ${work.span ? work.span : ""}`}
+      >
+
+        <div class="image-frame">
+          <img src={work.image} alt={work.title} />
+        </div>
+
+        <div class="overlay">
+          <span>{work.title}</span>
+        </div>
+
+      </a>
+    ))}
+
+  </div>
+
+</ArtworkLayout>

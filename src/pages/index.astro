@@ -1,0 +1,73 @@
+---
+import ArtworkLayout from "../layouts/ArtworkLayout.astro";
+
+const slides = [
+  {
+    image: "/images/Banners/a-moment-passing-banner.jpg",
+    title: "A Moment Passing",
+    slug: "a-moment-passing"
+  },
+  {
+    image: "/images/Banners/farimgsgade-banner.jpg",
+    title: "Farimagsgade 95",
+    slug: "farimagsgade-95"
+  },
+  {
+    image: "/images/Banners/vordingborggade-banner.jpg",
+    title: "Vordingborggade 74",
+    slug: "vordingborggade-74"
+  },
+  {
+    image: "/images/Banners/GA48L-banner.jpg",
+    title: "GA48L",
+    slug: "ga48l"
+  },
+];
+---
+
+<ArtworkLayout title="Home">
+
+  <section class="hero">
+
+    <div class="hero-slider">
+
+      {slides.map((slide, i) => (
+        <a
+          href={`/works/${slide.slug}`}
+          class={`hero-slide ${i === 0 ? "active" : ""}`}
+        >
+
+          <img src={slide.image} alt={slide.title} />
+
+          <div class="hero-caption">
+            <span>{slide.title}</span>
+          </div>
+
+        </a>
+      ))}
+
+    </div>
+
+  </section>
+
+</ArtworkLayout>
+
+<script>
+  const slides = document.querySelectorAll(".hero-slide");
+
+  let current = 0;
+
+  setInterval(() => {
+
+    slides[current].classList.remove("active");
+
+    current++;
+
+    if (current >= slides.length) {
+      current = 0;
+    }
+
+    slides[current].classList.add("active");
+
+  }, 6000);
+</script>
