@@ -161,7 +161,41 @@ nav a.active::after {
 }:root {
   --line: rgba(0, 0, 0, 0.1);
 }
+/* =========================
+   MOBILE HEADER FIX
+========================= */
 
+@media (max-width: 900px) {
+
+  header {
+    padding: 14px 16px;
+  }
+
+  /* if your header uses flex */
+  header {
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  /* site title */
+  header .site-title {
+    font-size: 16px;
+    letter-spacing: 0.03em;
+  }
+
+  /* nav links */
+  header nav {
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  header nav a {
+    font-size: 13px;
+    padding: 4px 0;
+  }
+
+}
 /* =========================
    WORKS GRID (CLEAN SYSTEM)
 ========================= */
