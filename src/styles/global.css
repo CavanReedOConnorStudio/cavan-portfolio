@@ -713,16 +713,61 @@ nav a.active::after {
 
 @media (max-width: 900px) {
 
-  .contact-container,
-  .cv-container {
-    margin-left: auto;
-    margin-right: auto;
+  .contact-container {
+    flex-direction: column;
+    gap: 56px;
 
-    padding-left: 1rem;
-    padding-right: 1rem;
+    padding: 64px 20px;
+  }
+
+  /* remove center divider */
+  .contact-container::before {
+    display: none;
+  }
+
+  .contact-left,
+  .contact-form {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .contact-left h2 {
+    margin-bottom: 32px;
+  }
+
+  .contact-intro {
+    margin-bottom: 32px;
+    max-width: 100%;
+  }
+
+  .contact-form {
+    margin-top: 0;
+    gap: 22px;
+  }
+
+  .contact-form input,
+  .contact-form textarea {
+    font-size: 16px; /* prevents iOS zoom */
   }
 
 }
+
+@media (max-width: 500px) {
+
+  .contact-container {
+    padding-top: 48px;
+  }
+
+  .contact-left h2 {
+    font-size: 18px;
+  }
+
+  .contact-block a {
+    font-size: 14px;
+  }
+
+}
+
 /* =========================
    CONTACT SUCCESS
 ========================= */
@@ -799,4 +844,47 @@ nav a.active::after {
   letter-spacing: 0.04em;
 
   opacity: 0.9;
+}
+
+/* =========================
+   RESPONSIVE HERO
+========================= */
+
+@media (max-width: 900px) {
+
+  .hero {
+    padding: 20px 16px 0;
+  }
+
+  .hero-slider {
+    aspect-ratio: 4 / 5;
+  }
+
+  .hero-caption {
+    bottom: 16px;
+    left: 16px;
+
+    font-size: 11px;
+    letter-spacing: 0.06em;
+
+    max-width: 80%;
+    line-height: 1.4;
+  }
+
+}
+
+/* smaller phones */
+
+@media (max-width: 500px) {
+
+  .hero-slider {
+    aspect-ratio: 3 / 4;
+  }
+
+  .hero-caption {
+    font-size: 10px;
+    bottom: 14px;
+    left: 14px;
+  }
+
 }
