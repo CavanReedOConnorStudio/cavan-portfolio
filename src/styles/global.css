@@ -857,7 +857,11 @@ nav a.active::after {
   }
 
   .hero-slider {
-    aspect-ratio: 4 / 5;
+    aspect-ratio: 16 / 10;
+  }
+
+  .hero-slide img {
+    object-position: center;
   }
 
   .hero-caption {
@@ -867,24 +871,16 @@ nav a.active::after {
     font-size: 11px;
     letter-spacing: 0.06em;
 
-    max-width: 80%;
     line-height: 1.4;
+    max-width: 85%;
   }
 
 }
 
-/* smaller phones */
-
 @media (max-width: 500px) {
 
   .hero-slider {
-    aspect-ratio: 3 / 4;
-  }
-
-  .hero-caption {
-    font-size: 10px;
-    bottom: 14px;
-    left: 14px;
+    aspect-ratio: 16 / 11;
   }
 
 }
